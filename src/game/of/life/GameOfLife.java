@@ -15,23 +15,23 @@ public class GameOfLife {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-//        char [][] field = new char [10][10];
-//        for (int i = 0; i < field.length; i++) {
-//            for (int j = 0; j < field[i].length; j++) {
-//                if (Math.random() < 0.2) {
-//                    field[i][j] = 'X';
-//                } else {
-//                    field[i][j] = '.';
-//                }
-//            }
-//        }
-        char[][] field = {
-            {'.', 'X', '.', 'X'},
-            {'.', '.', 'X', '.'},
-            {'.', 'X', 'X', '.'},
-            {'.', '.', '.', '.'},
-            
-        };
+        char [][] field = new char [10][10];
+        for (int i = 0; i < field.length; i++) {
+            for (int j = 0; j < field[i].length; j++) {
+                if (Math.random() < 0.2) {
+                    field[i][j] = 'X';
+                } else {
+                    field[i][j] = '.';
+                }
+            }
+        }
+//        char[][] field = {
+//            {'.', 'X', '.', 'X'},
+//            {'.', '.', 'X', '.'},
+//            {'.', 'X', 'X', '.'},
+//            {'.', '.', '.', '.'},
+//            
+//        };
         // prints field
         for (int i = 0; i < field.length; i++) {
             for (int j = 0; j < field[i].length; j++) {
@@ -40,8 +40,9 @@ public class GameOfLife {
             System.out.println();
         }
         System.out.println("------------------------");
-        
+        char[][][] history = new char[50][field.length][field[0].length];
         for (int c = 0; c < 50; c++) {
+            history[c] = field;
             char[][] newField = new char[field.length][field[0].length];
             // across all lines
             for (int i = 0; i < newField.length; i++) {
@@ -92,6 +93,27 @@ public class GameOfLife {
                     }
                 }
             }
+            // if new itteration matches one of the last itterations, we stop execution
+            int h;
+            for (h = c; h >= 0; h--) {
+                char[][] f = history[h];
+                boolean match = true;
+                for (int i = 0; match && i < f.length; i++) {
+                    for (int j = 0; match && j < f[i].length; j++) {
+                        if (f[i][j] != newField[i][j]) {
+                            match = false;
+                        }
+                    }
+                }
+                if (match) {
+                    break;
+                }
+            }
+            if (h >= 0) {
+                System.out.println("Iteration " + (c + 1) + " same as " + h);
+                break;
+                
+            }
             field = newField;
             for (int i = 0; i < field.length; i++) {
                 for (int j = 0; j < field[i].length; j++) {
@@ -99,7 +121,7 @@ public class GameOfLife {
                 }
                 System.out.println();
             }
-            System.out.println(c + "------------------------");
+            System.out.println((c + 1) + "------------------------");
         }
         
         
